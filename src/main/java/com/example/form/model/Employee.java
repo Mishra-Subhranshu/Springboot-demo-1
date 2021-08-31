@@ -1,7 +1,9 @@
 package com.example.form.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -12,11 +14,13 @@ public class Employee implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
+    @NotBlank
     @Column(name = "name")
+    @Size(min = 3, message = "Name should atleast have 3 characters")
     private String name;
 
-    @NotNull
+    @NotBlank
+    @Size(min = 4, message = "must be appropriate")
     @Column(name = "address")
     private String address;
 
