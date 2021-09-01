@@ -1,6 +1,7 @@
 package com.example.form.controller;
 
 import com.example.form.converter.EmployeeConverter;
+import com.example.form.exception.EmployeeNotFoundException;
 import com.example.form.model.Employee;
 import com.example.form.model.EmployeeDto;
 import com.example.form.repository.EmployeeRepository;
@@ -39,10 +40,17 @@ public class EmployeeController {
         return service.getAllEmployee();
     }
 
+//    @GetMapping("/get/{id}")
+//    public Employee getById(@PathVariable long id) {
+//        return service.getById(id);
+//    }
+
     @GetMapping("/get/{id}")
     public Employee getById(@PathVariable long id) {
-        return service.getById(id);
+        return employeeRepository.findById(id)
+                .orElseThrow(()-> new EmployeeNotFoundException(id));
     }
+
 
     @DeleteMapping("/delete/{id}")
     public String deleteEmployee(@PathVariable (value = "id")long id) {
