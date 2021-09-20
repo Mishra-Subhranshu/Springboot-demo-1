@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.net.www.content.audio.x_aiff;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -61,14 +62,28 @@ public class EmployeeController {
     @Autowired
     EmployeeRepository employeeRepository;
 
+//    @PutMapping("/employees/{id}")
+//    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
+//
+//        try {
+//            return new ResponseEntity<Employee>(employeeRepository.save(employee), HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
-
-        try {
-            return new ResponseEntity<Employee>(employeeRepository.save(employee), HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public Employee updateEmployee(@RequestBody Employee employee, @PathVariable long id) {
+        return employeeRepository.findById(id)
+                .map(employee1 -> {
+                    employee1.setName(employee.getName());
+                    employee1.setAddress(employee.getAddress());
+                    return employeeRepository.save(employee1);
+                })
+                .orElseGet(() -> {
+                    employee.setId(id);
+                    return employeeRepository.save(employee);
+                });
     }
 }
